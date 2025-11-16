@@ -1,0 +1,59 @@
+{
+  "name": "pointsHistory",
+  "type": "object",
+  "required": [
+    "studentId",
+    "studentName",
+    "points",
+    "reason",
+    "teacherName",
+    "type",
+    "creator",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "studentId": {
+      "bsonType": "string",
+      "description": "ID do aluno"
+    },
+    "studentName": {
+      "bsonType": "string",
+      "description": "Nome do aluno"
+    },
+    "points": {
+      "bsonType": "int",
+      "description": "Quantidade de pontos (positivo ou negativo)"
+    },
+    "reason": {
+      "bsonType": "string",
+      "description": "Motivo da pontuação"
+    },
+    "teacherName": {
+      "bsonType": "string",
+      "description": "Nome do professor responsável"
+    },
+    "type": {
+      "bsonType": "string",
+      "enum": [
+        "gain",
+        "loss"
+      ],
+      "description": "Tipo de movimentação (ganho ou perda)"
+    },
+    "creator": {
+      "bsonType": "string",
+      "description": "ID do criador do registro"
+    },
+    "createdAt": {
+      "bsonType": "string",
+      "title": "datetime",
+      "description": "Data do registro"
+    },
+    "updatedAt": {
+      "bsonType": "string",
+      "title": "datetime",
+      "description": "Data de atualização do registro"
+    }
+  }
+}

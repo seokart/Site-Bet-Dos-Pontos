@@ -1,0 +1,60 @@
+{
+  "name": "redemptions",
+  "type": "object",
+  "required": [
+    "studentId",
+    "studentName",
+    "rewardId",
+    "rewardName",
+    "pointsSpent",
+    "status",
+    "creator",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "studentId": {
+      "bsonType": "string",
+      "description": "ID do aluno"
+    },
+    "studentName": {
+      "bsonType": "string",
+      "description": "Nome do aluno"
+    },
+    "rewardId": {
+      "bsonType": "string",
+      "description": "ID da recompensa"
+    },
+    "rewardName": {
+      "bsonType": "string",
+      "description": "Nome da recompensa"
+    },
+    "pointsSpent": {
+      "bsonType": "int",
+      "description": "Pontos gastos"
+    },
+    "status": {
+      "bsonType": "string",
+      "enum": [
+        "pending",
+        "delivered",
+        "cancelled"
+      ],
+      "description": "Status do resgate"
+    },
+    "creator": {
+      "bsonType": "string",
+      "description": "ID do criador do registro"
+    },
+    "createdAt": {
+      "bsonType": "string",
+      "title": "datetime",
+      "description": "Data do resgate"
+    },
+    "updatedAt": {
+      "bsonType": "string",
+      "title": "datetime",
+      "description": "Data de atualização"
+    }
+  }
+}

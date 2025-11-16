@@ -1,0 +1,50 @@
+{
+  "name": "students",
+  "type": "object",
+  "required": [
+    "userId",
+    "name",
+    "class",
+    "photo",
+    "totalPoints",
+    "creator",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "userId": {
+      "bsonType": "string",
+      "description": "ID do usuário vinculado"
+    },
+    "name": {
+      "bsonType": "string",
+      "description": "Nome completo do aluno"
+    },
+    "class": {
+      "bsonType": "string",
+      "description": "Turma do aluno"
+    },
+    "photo": {
+      "bsonType": "string",
+      "description": "URL da foto do aluno"
+    },
+    "totalPoints": {
+      "bsonType": "int",
+      "description": "Total de pontos acumulados"
+    },
+    "creator": {
+      "bsonType": "string",
+      "description": "ID do criador do registro"
+    },
+    "createdAt": {
+      "bsonType": "string",
+      "title": "datetime",
+      "description": "Data de criação do registro"
+    },
+    "updatedAt": {
+      "bsonType": "string",
+      "title": "datetime",
+      "description": "Data de atualização do registro"
+    }
+  }
+}

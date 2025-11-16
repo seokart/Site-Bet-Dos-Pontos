@@ -1,0 +1,60 @@
+{
+  "name": "rewards",
+  "type": "object",
+  "required": [
+    "name",
+    "description",
+    "category",
+    "pointsCost",
+    "imageUrl",
+    "available",
+    "creator",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "name": {
+      "bsonType": "string",
+      "description": "Nome da recompensa"
+    },
+    "description": {
+      "bsonType": "string",
+      "description": "Descrição da recompensa"
+    },
+    "category": {
+      "bsonType": "string",
+      "enum": [
+        "cantina",
+        "materiais",
+        "extras"
+      ],
+      "description": "Categoria da recompensa"
+    },
+    "pointsCost": {
+      "bsonType": "int",
+      "description": "Custo em pontos"
+    },
+    "imageUrl": {
+      "bsonType": "string",
+      "description": "URL da imagem da recompensa"
+    },
+    "available": {
+      "bsonType": "bool",
+      "description": "Se a recompensa está disponível"
+    },
+    "creator": {
+      "bsonType": "string",
+      "description": "ID do criador do registro"
+    },
+    "createdAt": {
+      "bsonType": "string",
+      "title": "datetime",
+      "description": "Data de criação"
+    },
+    "updatedAt": {
+      "bsonType": "string",
+      "title": "datetime",
+      "description": "Data de atualização"
+    }
+  }
+}

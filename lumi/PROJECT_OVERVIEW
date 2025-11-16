@@ -1,0 +1,145 @@
+# Sistema Escolar de Pontos
+
+**Description**: Plataforma gamificada para escolas gerenciar pontos de alunos por presença, participação, empenho e entrega de atividades. Alunos trocam pontos por recompensas.
+
+**Tech Stack**: React + TypeScript + Vite + Tailwind CSS | Backend: MongoDB (Lumi SDK) | Auth: Lumi Platform RBAC (ADMIN/USER)
+
+## User Preferences
+
+- **Language**: pt-BR (Português)
+- **Code Style**: Componentes funcionais React, TypeScript strict mode
+- **Design System**: Tailwind CSS com cores escolares (azul #2563eb, verde #10b981, amarelo #f59e0b)
+
+## Directory Structure
+
+- `/src`: Código frontend
+  - `/components`: Componentes reutilizáveis (Navbar)
+  - `/pages`: Páginas do sistema (HomePage, StudentDashboard, TeacherDashboard, etc.)
+  - `/hooks`: Custom hooks (useAuth)
+  - `/lib`: Lumi SDK client
+
+## Current Features
+
+### Implemented (Fase 1)
+
+1. **Autenticação Lumi**: Sistema completo de login/logout com popup da plataforma - `src/hooks/useAuth.ts`
+2. **RBAC (Controle de Acesso por Função)**: 
+   - ADMIN (Professores): Acesso ao painel administrativo
+   - USER (Alunos): Acesso ao dashboard de aluno
+3. **Navegação Responsiva**: Navbar com links baseados em função - `src/components/Navbar.tsx`
+4. **Páginas Principais**:
+   - HomePage: Landing page com explicação do sistema
+   - StudentDashboard: Perfil do aluno com estatísticas
+   - TeacherDashboard: Painel administrativo do professor
+   - RewardsStore: Loja de recompensas
+   - Ranking: Classificação dos alunos
+   - PointsHistory: Histórico de pontuações
+5. **Schemas MongoDB**: 4 collections criadas (students, pointsHistory, rewards, redemptions)
+
+### Known Limitations
+
+- Dados de exemplo não inseridos ainda (Fase 2)
+- Funcionalidades CRUD não implementadas (Fase 2-3)
+- Interface mostra placeholders até integração completa
+
+## Database Schema
+
+**Type**: MongoDB (Lumi SDK)
+
+### `students`
+```typescript
+{
+  userId: string,        // ID do usuário vinculado
+  name: string,          // Nome completo do aluno
+  class: string,         // Turma do aluno
+  photo: string,         // URL da foto
+  totalPoints: int,      // Total de pontos acumulados
+  creator: string,
+  createdAt: string,     // ISO 8601
+  updatedAt: string
+}
+```
+
+### `pointsHistory`
+```typescript
+{
+  studentId: string,
+  studentName: string,
+  points: int,           // Positivo ou negativo
+  reason: string,        // Motivo da pontuação
+  teacherName: string,
+  type: "gain" | "loss",
+  creator: string,
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+### `rewards`
+```typescript
+{
+  name: string,
+  description: string,
+  category: "cantina" | "materiais" | "extras",
+  pointsCost: int,
+  imageUrl: string,
+  available: bool,
+  creator: string,
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+### `redemptions`
+```typescript
+{
+  studentId: string,
+  studentName: string,
+  rewardId: string,
+  rewardName: string,
+  pointsSpent: int,
+  status: "pending" | "delivered" | "cancelled",
+  creator: string,
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+## Deno Functions
+
+N/A - Não utiliza Deno Functions nesta implementação
+
+## API Endpoints
+
+**Lumi SDK Operations:**
+- `lumi.auth.signIn()`: Login via popup da plataforma
+- `lumi.auth.signOut()`: Logout
+- `lumi.entities.students.*`: CRUD de alunos
+- `lumi.entities.pointsHistory.*`: CRUD de histórico de pontos
+- `lumi.entities.rewards.*`: CRUD de recompensas
+- `lumi.entities.redemptions.*`: CRUD de resgates
+
+**External Integrations**: Nenhuma
+**Lumi SDK Tools Used**: LumiSdkAuthLoginTool, LumiSdkAuthRbacTool, LumiSdkMongoDBIntegrationTool
+
+## Improvement Opportunities
+
+### High Priority
+
+- [ ] **Fase 2**: Implementar hooks de dados (useStudents, usePoints, useRewards)
+- [ ] **Fase 3**: Adicionar funcionalidades CRUD completas nos dashboards
+- [ ] **Fase 4**: Inserir dados de exemplo para demonstração
+
+### Medium Priority
+
+- [ ] Adicionar filtros e busca nas páginas de lista
+- [ ] Implementar paginação para histórico e ranking
+- [ ] Sistema de notificações para resgates
+- [ ] Upload de fotos de alunos e recompensas
+
+### Low Priority / Future Enhancements
+
+- [ ] Gráficos de evolução de pontos
+- [ ] Exportação de relatórios em PDF
+- [ ] Sistema de badges e conquistas
+- [ ] Integração com calendário escolar
