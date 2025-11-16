@@ -1,8 +1,8 @@
-import React from "react"
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { Toaster } from "react-hot-toast"
 import HomePage from "./pages/HomePage"
-import StudentDashboard from "./pages/StudentDashboard"
+import StudentDashboard from "./pages/StudentsDashboard"
 import TeacherDashboard from "./pages/TeacherDashboard"
 import RewardsStore from "./pages/RewardsStore"
 import Ranking from "./pages/Ranking"

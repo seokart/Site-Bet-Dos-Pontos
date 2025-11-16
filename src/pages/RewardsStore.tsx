@@ -1,4 +1,4 @@
-import React from "react"
+
 import { Navigate } from "react-router-dom"
 import {Gift, ShoppingCart} from 'lucide-react'
 import { useAuth } from "../hooks/useAuth"
