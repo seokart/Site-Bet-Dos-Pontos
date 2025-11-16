@@ -1,22 +1,20 @@
-import { useState, useEffect } from "react"
-import { lumi } from "../lib/lumi"
-
-interface LumiUser {
-  id: string
-  email?: string
-  name?: string
-  userRole?: string
-  [key: string]: unknown
-}
+// src/hooks/useAuth.ts
+import { useState, useEffect, useCallback } from "react"
+import { lumi, LumiUser } from "../lib/lumi"
 
 export function useAuth() {
   const [user, setUser] = useState<LumiUser | null>(null)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Carrega o usuário atual na inicialização
   useEffect(() => {
+    if (!lumi) {
+      setLoading(false)
+      return
+    }
+
+    // tenta carregar o usuário atual
     lumi.auth
       .getUser()
       .then((currentUser: unknown) => {
@@ -34,56 +32,72 @@ export function useAuth() {
       })
       .finally(() => setLoading(false))
 
+    // escuta mudanças de autenticação
     const unsubscribe = lumi.auth.onAuthChange(
-      ({
-        isAuthenticated,
-        user,
-      }: {
-        isAuthenticated: boolean
-        user: unknown
-      }) => {
+      ({ isAuthenticated, user }: { isAuthenticated: boolean; user: unknown }) => {
         setIsAuthenticated(isAuthenticated)
-        setUser(isAuthenticated ? (user as LumiUser) : null)
+        setUser(isAuthenticated && user && typeof user === "object" ? (user as LumiUser) : null)
       }
     )
 
-    return unsubscribe
+    return () => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        unsubscribe && unsubscribe()
+      } catch {
+        // ignore
+      }
+    }
   }, [])
 
-  // ⭐ Login agora com email e senha
-  async function signIn(email: string, password: string) {
-    try {
-      setError(null)
-      const loggedUser = await lumi.auth.login(email, password)
-
-      if (loggedUser && typeof loggedUser === "object") {
-        setUser(loggedUser as LumiUser)
-        setIsAuthenticated(true)
+  // signIn: aceita (email, password) OU nenhum argumento (fallback para fluxo padrão)
+  const signIn = useCallback(
+    async (email?: string, password?: string) => {
+      if (!lumi) {
+        setError("Serviço de autenticação indisponível.")
+        return null
       }
-      return loggedUser
-    } catch (err: unknown) {
-      setError("Email ou senha inválidos.")
-      setIsAuthenticated(false)
-      console.error(err)
-      return null
-    }
-  }
 
-  // ⭐ Logout padrão
-  async function signOut() {
-    await lumi.auth.logout()
-    setUser(null)
-    setIsAuthenticated(false)
-  }
+      setError(null)
+      try {
+        // se email e password vierem, usa-os; senão tenta fluxo padrão do sdk (se existir)
+        const result = await lumi.auth.login(email, password)
+        if (result && typeof result === "object") {
+          setUser(result as LumiUser)
+          setIsAuthenticated(true)
+        }
+        return result
+      } catch (err) {
+        setError("Erro ao autenticar.")
+        setIsAuthenticated(false)
+        console.error(err)
+        return null
+      }
+    },
+    []
+  )
+
+  const signOut = useCallback(async () => {
+    if (!lumi) return
+    try {
+      await lumi.auth.logout()
+    } finally {
+      setUser(null)
+      setIsAuthenticated(false)
+    }
+  }, [])
+
+  const isAdmin = Boolean(user?.userRole === "ADMIN")
+  const isStudent = Boolean(user?.userRole === "USER")
 
   return {
     user,
     isAuthenticated,
     loading,
     error,
-    signIn,
+    signIn, // assinatura: (email?: string, password?: string) => Promise<unknown>
     signOut,
-    isAdmin: user?.userRole === "ADMIN",
-    isStudent: user?.userRole === "USER",
+    isAdmin,
+    isStudent,
   }
 }

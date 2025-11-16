@@ -1,28 +1,42 @@
+// src/lib/lumi.ts
 
+// Tipagem mínima e segura do usuário que o app usa
+export interface LumiUser {
+  id: string
+  email?: string
+  name?: string
+  userName?: string
+  userRole?: string
+  [key: string]: unknown
+}
 
-// Tipagem da parte de autenticação do Lumi
+// Tipagem da parte de autenticação do Lumi (sem any)
 interface LumiAuth {
-  login: (email: string, password: string) => Promise<unknown>
-  register: (email: string, password: string) => Promise<unknown>
+  // Aqui definimos login opcionalmente com email/senha
+  // Mas aceitamos também um fluxo sem argumentos (para compatibilidade)
+  login: (email?: string, password?: string) => Promise<unknown>
+  register?: (email: string, password: string) => Promise<unknown>
   logout: () => Promise<void>
   getUser: () => Promise<unknown>
+  // callback recebe isAuthenticated e user
   onAuthChange: (
     callback: (params: { isAuthenticated: boolean; user: unknown }) => void
   ) => () => void
 }
 
-// Tipagem do SDK da Lumi
+// SDK mínimo
 interface LumiSDK {
   auth: LumiAuth
+  // se no futuro usar db/storage, tipar aqui
 }
 
-// Obtém o SDK global carregado no index.html
+// Pega SDK global (carregado via <script> no index.html)
 const lumiGlobal = (window as unknown as { lumi?: unknown }).lumi
 
-// Converte para o tipo correto, sem ANY
-const lumi = lumiGlobal as LumiSDK
+// converte para o tipo seguro
+const lumi = lumiGlobal as LumiSDK | undefined
 
-if (!lumiGlobal) {
+if (!lumi) {
   console.warn("⚠ Lumi SDK não foi carregado! Verifique o index.html")
 }
 

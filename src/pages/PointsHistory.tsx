@@ -1,4 +1,4 @@
-import React from "react"
+
 import { Navigate } from "react-router-dom"
 import {History, TrendingUp, TrendingDown} from 'lucide-react'
 import { useAuth } from "../hooks/useAuth"

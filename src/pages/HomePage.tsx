@@ -1,4 +1,3 @@
-import React from "react"
 import { useNavigate } from "react-router-dom"
 import {Trophy, Star, Gift, Award, TrendingUp, Users} from 'lucide-react'
 import { useAuth } from "../hooks/useAuth"
