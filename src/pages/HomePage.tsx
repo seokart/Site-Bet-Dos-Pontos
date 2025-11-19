@@ -1,17 +1,29 @@
 import { useNavigate } from "react-router-dom"
-import {Trophy, Star, Gift, Award, TrendingUp, Users} from 'lucide-react'
-import { useAuth } from "../hooks/useAuth"
+import { Trophy, Star, Gift, Award, TrendingUp, Users } from 'lucide-react'
 import Navbar from "../components/Navbar"
+import { useEffect, useState } from "react"
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const { isAuthenticated, isAdmin, signIn } = useAuth()
+
+  // Estado para saber se tem sessão ativa
+  const [user, setUser] = useState<{ role: "ALUNO" | "PROFESSOR" } | null>(null)
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem("user")
+    if (stored) {
+      setUser(JSON.parse(stored))
+    }
+  }, [])
+
+  const isAuthenticated = !!user
+  const isAdmin = user?.role === "PROFESSOR"
 
   const handleGetStarted = () => {
     if (isAuthenticated) {
       navigate(isAdmin ? "/teacher" : "/student")
     } else {
-      signIn()
+      navigate("/login")
     }
   }
 
@@ -106,7 +118,7 @@ export default function HomePage() {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
                   <span className="text-blue-600 font-bold mr-2">1.</span>
-                  Faça login e acesse seu perfil pessoal
+                  Acesse seu perfil pessoal
                 </li>
                 <li className="flex items-start">
                   <span className="text-blue-600 font-bold mr-2">2.</span>
@@ -114,15 +126,15 @@ export default function HomePage() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-blue-600 font-bold mr-2">3.</span>
-                  Acompanhe seu histórico de pontos em tempo real
+                  Acompanhe seu histórico de pontos
                 </li>
                 <li className="flex items-start">
                   <span className="text-blue-600 font-bold mr-2">4.</span>
-                  Troque seus pontos por recompensas na loja
+                  Troque seus pontos por recompensas
                 </li>
                 <li className="flex items-start">
                   <span className="text-blue-600 font-bold mr-2">5.</span>
-                  Veja sua posição no ranking escolar
+                  Veja sua posição no ranking
                 </li>
               </ul>
             </div>
@@ -146,11 +158,11 @@ export default function HomePage() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-600 font-bold mr-2">4.</span>
-                  Visualize histórico completo de todos os alunos
+                  Visualize o histórico de todos os alunos
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-600 font-bold mr-2">5.</span>
-                  Cadastre e gerencie recompensas disponíveis
+                  Cadastre e gerencie recompensas
                 </li>
               </ul>
             </div>
